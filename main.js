@@ -96,7 +96,8 @@ function createWindow() {
     height: 800,
     minWidth: 960,
     minHeight: 600,
-    title: '要事第一 - 四象限法则',
+    title: '🎯 要事第一 - 四象限法则',
+    icon: path.join(__dirname, 'icon.ico'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false

@@ -64,8 +64,7 @@ function checkReminders() {
     if (Notification.isSupported()) {
       const notification = new Notification({
         title: '⏰ 要事第一 · 别忘了重要的事！',
-        body: `你的「重要不紧急」任务还有 ${q2Tasks.length} 项：\n${taskList}`,
-        icon: path.join(__dirname, 'icon.png')
+        body: `你的「重要不紧急」任务还有 ${q2Tasks.length} 项：\n${taskList}`
       });
 
       notification.on('click', () => {
@@ -93,7 +92,6 @@ function createWindow() {
     minWidth: 960,
     minHeight: 600,
     title: '要事第一 - 四象限法则',
-    icon: path.join(__dirname, 'icon.png'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false

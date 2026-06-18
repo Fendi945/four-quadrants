@@ -30,11 +30,20 @@
         <div class="quadrant-icon">🔴</div>
         <h2>重要 <span class="ampersand">&</span> 紧急</h2>
         <span class="badge urgent">立即去做</span>
+        <span class="task-count" id="count-q1">0</span>
       </div>
       <div class="quadrant-desc">危机 · 截止日期 · 紧急问题</div>
       <div class="task-list" id="q1-list"></div>
       <div class="add-task">
-        <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q1">
+        <div class="task-input-row">
+          <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q1">
+          <button class="btn-time-picker" data-quadrant="q1" title="设置计划时间">⏰</button>
+        </div>
+        <div class="time-picker" id="time-q1" style="display:none;">
+          <input type="date" class="date-input" id="date-q1">
+          <input type="time" class="time-input" id="time-val-q1" value="12:00">
+          <button class="btn-time-clear" onclick="clearTime('q1')">清除</button>
+        </div>
       </div>
     </div>
 
@@ -43,11 +52,20 @@
         <div class="quadrant-icon">🟢</div>
         <h2>重要 <span class="ampersand">&</span> 不紧急</h2>
         <span class="badge plan">制定计划</span>
+        <span class="task-count" id="count-q2">0</span>
       </div>
       <div class="quadrant-desc">规划 · 学习 · 健康 · 关系</div>
       <div class="task-list" id="q2-list"></div>
       <div class="add-task">
-        <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q2">
+        <div class="task-input-row">
+          <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q2">
+          <button class="btn-time-picker" data-quadrant="q2" title="设置计划时间">⏰</button>
+        </div>
+        <div class="time-picker" id="time-q2" style="display:none;">
+          <input type="date" class="date-input" id="date-q2">
+          <input type="time" class="time-input" id="time-val-q2" value="12:00">
+          <button class="btn-time-clear" onclick="clearTime('q2')">清除</button>
+        </div>
       </div>
     </div>
 
@@ -56,11 +74,20 @@
         <div class="quadrant-icon">🔵</div>
         <h2>不重要 <span class="ampersand">&</span> 紧急</h2>
         <span class="badge delegate">委托他人</span>
+        <span class="task-count" id="count-q3">0</span>
       </div>
       <div class="quadrant-desc">干扰 · 琐事 · 部分邮件</div>
       <div class="task-list" id="q3-list"></div>
       <div class="add-task">
-        <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q3">
+        <div class="task-input-row">
+          <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q3">
+          <button class="btn-time-picker" data-quadrant="q3" title="设置计划时间">⏰</button>
+        </div>
+        <div class="time-picker" id="time-q3" style="display:none;">
+          <input type="date" class="date-input" id="date-q3">
+          <input type="time" class="time-input" id="time-val-q3" value="12:00">
+          <button class="btn-time-clear" onclick="clearTime('q3')">清除</button>
+        </div>
       </div>
     </div>
 
@@ -69,25 +96,34 @@
         <div class="quadrant-icon">⚪</div>
         <h2>不重要 <span class="ampersand">&</span> 不紧急</h2>
         <span class="badge eliminate">尽量不做</span>
+        <span class="task-count" id="count-q4">0</span>
       </div>
       <div class="quadrant-desc">娱乐 · 消遣 · 浪费时间</div>
       <div class="task-list" id="q4-list"></div>
       <div class="add-task">
-        <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q4">
+        <div class="task-input-row">
+          <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q4">
+          <button class="btn-time-picker" data-quadrant="q4" title="设置计划时间">⏰</button>
+        </div>
+        <div class="time-picker" id="time-q4" style="display:none;">
+          <input type="date" class="date-input" id="date-q4">
+          <input type="time" class="time-input" id="time-val-q4" value="12:00">
+          <button class="btn-time-clear" onclick="clearTime('q4')">清除</button>
+        </div>
       </div>
     </div>
   </main>
 
-  <!-- 每日提醒弹窗 -->
+  <!-- 今日计划弹窗 -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal" id="modal">
       <div class="modal-header">
-        <h2>⏰ 每日提醒</h2>
+        <h2>📅 今日计划</h2>
         <span class="modal-close" onclick="closeModal()">&times;</span>
       </div>
       <div class="modal-body" id="modalBody"></div>
       <div class="modal-footer">
-        <button class="btn btn-primary" onclick="closeModal()">我知道了 ✅</button>
+        <button class="btn btn-primary" onclick="closeModal()">知道了 ✅</button>
       </div>
     </div>
   </div>

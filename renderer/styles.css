@@ -518,6 +518,116 @@ header {
   color: var(--text-light);
 }
 
+/* ========== 输入栏 + 时间按钮 ========== */
+.task-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.task-input-row .task-input {
+  flex: 1;
+}
+
+.btn-time-picker {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.btn-time-picker:hover {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: var(--orange);
+}
+
+.btn-time-picker.active {
+  background: var(--orange-bg, rgba(240, 128, 64, 0.15));
+  border-color: var(--orange);
+  box-shadow: 0 0 8px var(--orange-glow);
+}
+
+/* ========== 时间选择器 ========== */
+.time-picker {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideIn 0.2s ease;
+}
+
+.date-input, .time-input {
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text-primary);
+  outline: none;
+  font-family: inherit;
+  flex: 1;
+  min-width: 0;
+}
+
+.date-input:focus, .time-input:focus {
+  border-color: var(--orange);
+}
+
+.btn-time-clear {
+  padding: 6px 10px;
+  border: 1px solid rgba(160, 144, 136, 0.25);
+  border-radius: 6px;
+  background: rgba(160, 144, 136, 0.1);
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.btn-time-clear:hover {
+  background: rgba(240, 128, 64, 0.15);
+  border-color: rgba(240, 128, 64, 0.3);
+  color: var(--q1-color);
+}
+
+/* ========== 任务时间显示 ========== */
+.task-time {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-left: auto;
+  white-space: nowrap;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.task-time.overdue {
+  color: var(--q1-color);
+  background: rgba(240, 128, 64, 0.1);
+}
+
+.task-time.today {
+  color: var(--q2-color);
+  background: rgba(106, 158, 122, 0.1);
+}
+
 /* ========== 象限拖拽提示 ========== */
 .quadrant.drag-over {
   border-color: var(--orange) !important;

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>要事第一 - 四象限法则</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 顶部标题栏 -->
+  <header>
+    <div class="header-content">
+      <h1>📋 要事第一</h1>
+      <p class="subtitle">史蒂芬·柯维 — 四象限法则</p>
+      <div class="header-quote">
+        "重要的事绝不要被不重要的小事牵绊"
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-clear" onclick="clearDoneTasks()" title="清除已完成任务">🗑️ 清理已完成</button>
+      <button class="btn btn-reset" onclick="resetAllTasks()" title="重置为默认示例">🔄 重置示例</button>
+      <span class="date-display" id="dateDisplay"></span>
+    </div>
+  </header>
+
+  <!-- 四象限矩阵 -->
+  <main class="quadrant-container">
+    <div class="quadrant urgent-important" data-quadrant="q1">
+      <div class="quadrant-header q1-bg">
+        <div class="quadrant-icon">🔴</div>
+        <h2>重要 <span class="ampersand">&</span> 紧急</h2>
+        <span class="badge urgent">立即去做</span>
+      </div>
+      <div class="quadrant-desc">危机 · 截止日期 · 紧急问题</div>
+      <div class="task-list" id="q1-list"></div>
+      <div class="add-task">
+        <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q1">
+      </div>
+    </div>
+
+    <div class="quadrant important-not-urgent" data-quadrant="q2">
+      <div class="quadrant-header q2-bg">
+        <div class="quadrant-icon">🟢</div>
+        <h2>重要 <span class="ampersand">&</span> 不紧急</h2>
+        <span class="badge plan">制定计划</span>
+      </div>
+      <div class="quadrant-desc">规划 · 学习 · 健康 · 关系</div>
+      <div class="task-list" id="q2-list"></div>
+      <div class="add-task">
+        <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q2">
+      </div>
+    </div>
+
+    <div class="quadrant not-important-urgent" data-quadrant="q3">
+      <div class="quadrant-header q3-bg">
+        <div class="quadrant-icon">🔵</div>
+        <h2>不重要 <span class="ampersand">&</span> 紧急</h2>
+        <span class="badge delegate">委托他人</span>
+      </div>
+      <div class="quadrant-desc">干扰 · 琐事 · 部分邮件</div>
+      <div class="task-list" id="q3-list"></div>
+      <div class="add-task">
+        <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q3">
+      </div>
+    </div>
+
+    <div class="quadrant not-important-not-urgent" data-quadrant="q4">
+      <div class="quadrant-header q4-bg">
+        <div class="quadrant-icon">⚪</div>
+        <h2>不重要 <span class="ampersand">&</span> 不紧急</h2>
+        <span class="badge eliminate">尽量不做</span>
+      </div>
+      <div class="quadrant-desc">娱乐 · 消遣 · 浪费时间</div>
+      <div class="task-list" id="q4-list"></div>
+      <div class="add-task">
+        <input type="text" class="task-input" placeholder="+ 添加任务..." data-quadrant="q4">
+      </div>
+    </div>
+  </main>
+
+  <!-- 每日提醒弹窗 -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h2>⏰ 每日提醒</h2>
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeModal()">我知道了 ✅</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

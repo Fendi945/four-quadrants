@@ -1,0 +1,523 @@
+/* ============================================
+   要事第一 - 四象限法则 桌面提醒程序
+   ============================================ */
+
+/* 字体与基础设置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --q1-color: #e74c3c;
+  --q1-bg: #fef2f2;
+  --q1-border: #fecaca;
+  --q1-hover: #fee2e2;
+
+  --q2-color: #10b981;
+  --q2-bg: #f0fdf4;
+  --q2-border: #bbf7d0;
+  --q2-hover: #dcfce7;
+
+  --q3-color: #3b82f6;
+  --q3-bg: #eff6ff;
+  --q3-border: #bfdbfe;
+  --q3-hover: #dbeafe;
+
+  --q4-color: #94a3b8;
+  --q4-bg: #f8fafc;
+  --q4-border: #e2e8f0;
+  --q4-hover: #f1f5f9;
+
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-light: #94a3b8;
+
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --radius: 12px;
+  --radius-sm: 8px;
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background: #f1f5f9;
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========== 顶部标题栏 ========== */
+header {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: white;
+  padding: 20px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+.header-quote {
+  font-size: 13px;
+  color: #94a3b8;
+  font-style: italic;
+  margin-top: 6px;
+  border-left: 3px solid var(--q2-color);
+  padding-left: 12px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.date-display {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+
+/* ========== 按钮 ========== */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-clear {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+}
+
+.btn-clear:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+.btn-reset {
+  background: rgba(148, 163, 184, 0.2);
+  color: #94a3b8;
+}
+
+.btn-reset:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+.btn-primary {
+  background: var(--q2-color);
+  color: white;
+  padding: 10px 24px;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-primary:hover {
+  background: #059669;
+}
+
+/* ========== 四象限矩阵容器 ========== */
+.quadrant-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+  padding: 20px;
+  height: calc(100vh - 120px);
+  min-height: 500px;
+}
+
+/* ========== 单个象限 ========== */
+.quadrant {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  border-left: 4px solid transparent;
+}
+
+.quadrant:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.quadrant[data-quadrant="q1"] { border-left-color: var(--q1-color); }
+.quadrant[data-quadrant="q2"] { border-left-color: var(--q2-color); }
+.quadrant[data-quadrant="q3"] { border-left-color: var(--q3-color); }
+.quadrant[data-quadrant="q4"] { border-left-color: var(--q4-color); }
+
+/* ========== 象限头部 ========== */
+.quadrant-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.quadrant-header .quadrant-icon {
+  font-size: 20px;
+}
+
+.quadrant-header h2 {
+  font-size: 15px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.ampersand {
+  font-weight: 300;
+  opacity: 0.7;
+}
+
+.q1-bg { color: var(--q1-color); }
+.q2-bg { color: var(--q2-color); }
+.q3-bg { color: var(--q3-color); }
+.q4-bg { color: var(--q4-color); }
+
+.badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.badge.urgent { background: var(--q1-bg); color: var(--q1-color); }
+.badge.plan { background: var(--q2-bg); color: var(--q2-color); }
+.badge.delegate { background: var(--q3-bg); color: var(--q3-color); }
+.badge.eliminate { background: var(--q4-bg); color: var(--q4-color); }
+
+.quadrant-desc {
+  font-size: 11px;
+  color: var(--text-light);
+  padding: 0 18px 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* ========== 任务列表 ========== */
+.task-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.task-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 2px;
+}
+
+/* 任务项 */
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 2px 0;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  cursor: grab;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.quadrant[data-quadrant="q1"] .task-item:hover { background: var(--q1-hover); }
+.quadrant[data-quadrant="q2"] .task-item:hover { background: var(--q2-hover); }
+.quadrant[data-quadrant="q3"] .task-item:hover { background: var(--q3-hover); }
+.quadrant[data-quadrant="q4"] .task-item:hover { background: var(--q4-hover); }
+
+.task-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #cbd5e1;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  font-size: 10px;
+  color: transparent;
+}
+
+.task-checkbox.done {
+  border-color: var(--q2-color);
+  background: var(--q2-color);
+  color: white;
+}
+
+.task-text {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.task-text.done {
+  text-decoration: line-through;
+  color: var(--text-light);
+}
+
+/* 象限特定的任务文字颜色 */
+.quadrant[data-quadrant="q1"] .task-item .task-text { color: #991b1b; }
+.quadrant[data-quadrant="q2"] .task-item .task-text { color: #065f46; }
+.quadrant[data-quadrant="q3"] .task-item .task-text { color: #1e40af; }
+.quadrant[data-quadrant="q4"] .task-item .task-text { color: var(--text-light); }
+
+.task-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.task-item:hover .task-actions {
+  opacity: 1;
+}
+
+.task-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: var(--text-light);
+}
+
+.task-btn:hover {
+  background: rgba(0,0,0,0.08);
+  color: var(--text-primary);
+}
+
+.task-btn.delete-btn:hover {
+  background: var(--q1-bg);
+  color: var(--q1-color);
+}
+
+.task-remind-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.task-remind-btn.active {
+  color: #f59e0b;
+}
+
+.task-remind-btn.inactive {
+  color: var(--text-light);
+  opacity: 0.4;
+}
+
+.task-remind-btn:hover {
+  background: rgba(0,0,0,0.08);
+}
+
+/* 空状态提示 */
+.empty-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-light);
+  font-size: 13px;
+  gap: 4px;
+}
+
+/* ========== 输入框 ========== */
+.add-task {
+  padding: 8px 12px 10px;
+  border-top: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+
+.task-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px dashed #e2e8f0;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s;
+  background: transparent;
+  font-family: inherit;
+}
+
+.task-input:focus {
+  border-color: var(--q2-color);
+  background: white;
+}
+
+.quadrant[data-quadrant="q1"] .task-input:focus { border-color: var(--q1-color); }
+.quadrant[data-quadrant="q2"] .task-input:focus { border-color: var(--q2-color); }
+.quadrant[data-quadrant="q3"] .task-input:focus { border-color: var(--q3-color); }
+.quadrant[data-quadrant="q4"] .task-input:focus { border-color: var(--q4-color); }
+
+.task-input::placeholder {
+  color: var(--text-light);
+}
+
+/* ========== 象限拖拽提示 ========== */
+.quadrant.drag-over {
+  border-color: var(--q2-color) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* ========== 弹窗 ========== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  width: 480px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 18px;
+}
+
+.modal-close {
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 24px;
+  line-height: 1.8;
+}
+
+.modal-body .quote {
+  font-style: italic;
+  color: var(--text-secondary);
+  border-left: 3px solid var(--q2-color);
+  padding-left: 16px;
+  margin: 12px 0;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #f1f5f9;
+  text-align: right;
+}
+
+/* ========== 任务计数徽章 ========== */
+.task-count {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-left: auto;
+  padding: 1px 8px;
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 800px) {
+  .quadrant-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    height: auto;
+  }
+
+  header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

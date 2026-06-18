@@ -9,21 +9,25 @@ let reminderInterval;
 // 任务数据存储路径
 const dataPath = path.join(app.getPath('userData'), 'tasks.json');
 
-// 默认任务示例
-const defaultTasks = {
-  q1: { title: '🔴 重要且紧急', tasks: [
-    { id: Date.now() + 1, text: '例：项目截止日期', done: false, remind: true }
-  ] },
-  q2: { title: '🟢 重要不紧急', tasks: [
-    { id: Date.now() + 2, text: '例：学习新技能', done: false, remind: true }
-  ] },
-  q3: { title: '🔵 不重要但紧急', tasks: [
-    { id: Date.now() + 3, text: '例：回复邮件', done: false, remind: false }
-  ] },
-  q4: { title: '⚪ 不重要不紧急', tasks: [
-    { id: Date.now() + 4, text: '例：刷短视频', done: false, remind: false }
-  ] }
-};
+// 默认任务示例（带时间计划）
+function getDefaultTasks() {
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  return {
+    q1: { title: '🔴 重要且紧急', tasks: [
+      { id: Date.now() + 1, text: '例：项目截止日期', done: false, remind: true, plannedTime: `${today}T17:00:00` }
+    ] },
+    q2: { title: '🟢 重要不紧急', tasks: [
+      { id: Date.now() + 2, text: '例：学习新技能', done: false, remind: true, plannedTime: `${today}T10:00:00` }
+    ] },
+    q3: { title: '🔵 不重要但紧急', tasks: [
+      { id: Date.now() + 3, text: '例：回复邮件', done: false, remind: false, plannedTime: null }
+    ] },
+    q4: { title: '⚪ 不重要不紧急', tasks: [
+      { id: Date.now() + 4, text: '例：刷短视频', done: false, remind: false, plannedTime: null }
+    ] }
+  };
+}
 
 // 加载或初始化任务数据
 function loadTasks() {
@@ -36,8 +40,9 @@ function loadTasks() {
     console.error('加载数据失败:', e);
   }
   // 首次使用，写入默认数据
-  saveTasks(defaultTasks);
-  return JSON.parse(JSON.stringify(defaultTasks));
+  const def = getDefaultTasks();
+  saveTasks(def);
+  return JSON.parse(JSON.stringify(def));
 }
 
 function saveTasks(tasks) {

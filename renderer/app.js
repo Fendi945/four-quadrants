@@ -173,22 +173,59 @@ function addTask(qId, text) {
     plannedTime = `${dateVal}T${timeVal}:00`;
   }
 
-  tasks[qId].tasks.push({
-    id: Date.now() + Math.random(),
-    text,
-    done: false,
-    remind: qId === 'q1' || qId === 'q2',
-    plannedTime
-  });
+  // ★ 用户添加了带时间的真实任务 → 自动替换示例任务
+  const exampleIdx = tasks[qId].tasks.findIndex(t =>
+    t.text.startsWith('例：') && !t.done
+  );
+  if (exampleIdx !== -1 && text !== '') {
+    // 替换示例任务
+    tasks[qId].tasks[exampleIdx] = {
+      id: Date.now() + Math.random(),
+      text,
+      done: false,
+      remind: qId === 'q1' || qId === 'q2',
+      plannedTime
+    };
+  } else {
+    tasks[qId].tasks.push({
+      id: Date.now() + Math.random(),
+      text,
+      done: false,
+      remind: qId === 'q1' || qId === 'q2',
+      plannedTime
+    });
+  }
 
   saveTasks();
   renderQuadrant(qId);
 }
 
 function toggleTask(qId, index) {
-  tasks[qId].tasks[index].done = !tasks[qId].tasks[index].done;
+  const task = tasks[qId].tasks[index];
+  task.done = !task.done;
+
+  // ★ 完成任务时，如果有示例任务，自动替换掉一个示例
+  if (task.done) {
+    const exampleIdx = tasks[qId].tasks.findIndex(t =>
+      t.text.startsWith('例：') && !t.done && t.id !== task.id
+    );
+    if (exampleIdx !== -1) {
+      // 用已完成任务替换示例，重置状态让用户可以重新填
+      const completedText = task.text;
+      tasks[qId].tasks[exampleIdx] = {
+        id: Date.now() + Math.random(),
+        text: completedText,
+        done: false,
+        remind: qId === 'q1' || qId === 'q2',
+        plannedTime: task.plannedTime
+      };
+      // 删除原已完成的任务
+      tasks[qId].tasks.splice(index, 1);
+    }
+  }
+
   saveTasks();
-  renderQuadrant(qId);
+  renderAll();
 }
 
 function deleteTask(qId, index) {

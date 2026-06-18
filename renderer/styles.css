@@ -11,42 +11,42 @@
 
 :root {
   /* 暖橙主色调 */
-  --orange: #f08040;
-  --orange-glow: rgba(240, 128, 64, 0.3);
-  --orange-dark: #d46a2e;
+  --orange: #e8753a;
+  --orange-glow: rgba(232, 117, 58, 0.25);
+  --orange-dark: #cc5e28;
   --orange-light: #ffb080;
 
-  /* 玻璃色 */
-  --glass-white: rgba(255, 255, 255, 0.25);
-  --glass-border: rgba(255, 255, 255, 0.35);
-  --glass-shadow: rgba(80, 50, 30, 0.12);
+  /* 玻璃色 - 更高不透明度提升文字可读性 */
+  --glass-white: rgba(255, 255, 255, 0.40);
+  --glass-border: rgba(255, 255, 255, 0.45);
+  --glass-shadow: rgba(60, 35, 20, 0.12);
 
-  /* 四象限配色 - 半透明玻璃版 */
-  --q1-glass: rgba(240, 128, 64, 0.15);
-  --q1-border: rgba(240, 128, 64, 0.3);
-  --q1-color: #f08040;
-  --q1-glow: rgba(240, 128, 64, 0.1);
+  /* 四象限配色 - 更高对比度 */
+  --q1-glass: rgba(232, 117, 58, 0.18);
+  --q1-border: rgba(232, 117, 58, 0.30);
+  --q1-color: #cc5e28;
+  --q1-glow: rgba(232, 117, 58, 0.12);
 
-  --q2-glass: rgba(106, 158, 122, 0.15);
-  --q2-border: rgba(106, 158, 122, 0.3);
-  --q2-color: #5a8e6a;
-  --q2-glow: rgba(106, 158, 122, 0.1);
+  --q2-glass: rgba(80, 140, 100, 0.18);
+  --q2-border: rgba(80, 140, 100, 0.30);
+  --q2-color: #3d7a4e;
+  --q2-glow: rgba(80, 140, 100, 0.12);
 
-  --q3-glass: rgba(106, 142, 176, 0.15);
-  --q3-border: rgba(106, 142, 176, 0.3);
-  --q3-color: #5a7ea0;
-  --q3-glow: rgba(106, 142, 176, 0.1);
+  --q3-glass: rgba(80, 120, 160, 0.18);
+  --q3-border: rgba(80, 120, 160, 0.30);
+  --q3-color: #3d6a8a;
+  --q3-glow: rgba(80, 120, 160, 0.12);
 
-  --q4-glass: rgba(160, 144, 136, 0.12);
-  --q4-border: rgba(160, 144, 136, 0.25);
-  --q4-color: #908078;
-  --q4-glow: rgba(160, 144, 136, 0.08);
+  --q4-glass: rgba(140, 125, 115, 0.16);
+  --q4-border: rgba(140, 125, 115, 0.28);
+  --q4-color: #7a6a62;
+  --q4-glow: rgba(140, 125, 115, 0.10);
 
-  /* 文字色 */
-  --text-primary: #2a2018;
-  --text-secondary: #6a5a4a;
-  --text-light: #a09088;
-  --text-white: #f0e8e0;
+  /* 文字色 - 更高对比度 */
+  --text-primary: #1a1008;
+  --text-secondary: #4a3a2a;
+  --text-light: #8a7a72;
+  --text-white: #f5ede5;
 
   --radius: 16px;
   --radius-sm: 10px;
@@ -191,11 +191,9 @@ header {
   min-height: 500px;
 }
 
-/* ========== 单个象限 - 玻璃效果 ========== */
+/* ========== 单个象限 - 磨砂玻璃质感 ========== */
 .quadrant {
   background: var(--glass-white);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border-radius: var(--radius);
   border: 1px solid var(--glass-border);
   box-shadow: 0 8px 32px var(--glass-shadow);
@@ -263,8 +261,6 @@ header {
   border-radius: 10px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 .badge.urgent {
@@ -326,10 +322,8 @@ header {
   transition: all 0.2s;
   cursor: grab;
   animation: slideIn 0.3s ease;
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 @keyframes slideIn {
@@ -357,7 +351,7 @@ header {
 .task-checkbox {
   width: 20px;
   height: 20px;
-  border: 2px solid rgba(160, 144, 136, 0.5);
+  border: 2px solid rgba(120, 100, 90, 0.5);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -367,9 +361,7 @@ header {
   transition: all 0.25s;
   font-size: 11px;
   color: transparent;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .task-checkbox:hover {
@@ -393,14 +385,14 @@ header {
 
 .task-text.done {
   text-decoration: line-through;
-  opacity: 0.5;
+  opacity: 0.65;
 }
 
-/* 象限特定的任务文字颜色 */
-.quadrant[data-quadrant="q1"] .task-item .task-text { color: #5a2e14; }
-.quadrant[data-quadrant="q2"] .task-item .task-text { color: #1a4a2a; }
-.quadrant[data-quadrant="q3"] .task-item .task-text { color: #1a3a5a; }
-.quadrant[data-quadrant="q4"] .task-item .task-text { color: var(--text-light); }
+/* 象限特定的任务文字颜色 - 高对比度 */
+.quadrant[data-quadrant="q1"] .task-item .task-text { color: #4a2010; font-weight: 500; }
+.quadrant[data-quadrant="q2"] .task-item .task-text { color: #14522a; font-weight: 500; }
+.quadrant[data-quadrant="q3"] .task-item .task-text { color: #1a3050; font-weight: 500; }
+.quadrant[data-quadrant="q4"] .task-item .task-text { color: #6a5a50; }
 
 .task-actions {
   display: flex;
@@ -489,14 +481,12 @@ header {
 .task-input {
   width: 100%;
   padding: 10px 14px;
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
   border-radius: var(--radius-sm);
   font-size: 13px;
   outline: none;
   transition: all 0.25s;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.35);
   font-family: inherit;
   color: var(--text-primary);
 }
@@ -580,9 +570,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(26, 20, 16, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(26, 20, 16, 0.7);
   border-radius: var(--radius) var(--radius) 0 0;
 }
 

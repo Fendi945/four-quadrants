@@ -117,7 +117,7 @@ function renderQuadrant(qId) {
     if (origIndex === -1) return;
 
     const el = document.createElement('div');
-    el.className = 'task-item';
+    el.className = 'task-item' + (task.done ? ' done' : '');
     el.draggable = true;
     el.dataset.quadrant = qId;
     el.dataset.index = origIndex;
@@ -130,19 +130,34 @@ function renderQuadrant(qId) {
     }
 
     el.innerHTML = `
-      <div class="task-checkbox ${task.done ? 'done' : ''}" onclick="toggleTask('${qId}', ${origIndex})">
+      <div class="task-checkbox ${task.done ? 'done' : ''}" onclick="event.stopPropagation(); toggleTask('${qId}', ${origIndex})">
         ${task.done ? '✓' : ''}
       </div>
-      <span class="task-text ${task.done ? 'done' : ''}">${escapeHtml(task.text)}</span>
+      <span class="task-text ${task.done ? 'done' : ''}" onclick="event.stopPropagation(); editTaskText('${qId}', ${origIndex})">${escapeHtml(task.text)}</span>
       ${timeHtml}
       <span class="task-actions">
         <div class="task-remind-btn ${task.remind ? 'active' : 'inactive'}"
-             onclick="toggleRemind('${qId}', ${origIndex})" title="${task.remind ? '已开启提醒' : '开启提醒'}">
+             onclick="event.stopPropagation(); toggleRemind('${qId}', ${origIndex})" title="${task.remind ? '已开启提醒' : '开启提醒'}">
           ${task.remind ? '🔔' : '🔕'}
         </div>
-        <div class="task-btn delete-btn" onclick="deleteTask('${qId}', ${origIndex})" title="删除">✕</div>
+        <div class="task-btn delete-btn" onclick="event.stopPropagation(); deleteTask('${qId}', ${origIndex})" title="删除">✕</div>
       </span>
     `;
+
+    // ★ 点击整个任务行切换完成状态（双击编辑文字）
+    el.addEventListener('click', (e) => {
+      // 不触发如果点的是内部按钮/链接
+      if (e.target.closest('.task-checkbox') ||
+          e.target.closest('.task-actions') ||
+          e.target.closest('.task-time')) return;
+      toggleTask(qId, origIndex);
+    });
+
+    el.addEventListener('dblclick', (e) => {
+      if (e.target.closest('.task-checkbox') ||
+          e.target.closest('.task-actions')) return;
+      editTaskText(qId, origIndex);
+    });
 
     el.addEventListener('dragstart', (e) => {
       draggedItem = { quadrant: qId, index: origIndex };
@@ -173,12 +188,12 @@ function addTask(qId, text) {
     plannedTime = `${dateVal}T${timeVal}:00`;
   }
 
-  // ★ 用户添加了带时间的真实任务 → 自动替换示例任务
+  // ★ 用户添加了真实任务 → 自动替换示例任务
   const exampleIdx = tasks[qId].tasks.findIndex(t =>
-    t.text.startsWith('例：') && !t.done
+    (t.text.startsWith('例：') || t.text.startsWith('示例：')) && !t.done
   );
-  if (exampleIdx !== -1 && text !== '') {
-    // 替换示例任务
+  if (exampleIdx !== -1) {
+    // 替换示例任务，保留原有位置
     tasks[qId].tasks[exampleIdx] = {
       id: Date.now() + Math.random(),
       text,
@@ -187,7 +202,8 @@ function addTask(qId, text) {
       plannedTime
     };
   } else {
-    tasks[qId].tasks.push({
+    // 没有示例任务 → 追加到列表最前面（最新添加置顶）
+    tasks[qId].tasks.unshift({
       id: Date.now() + Math.random(),
       text,
       done: false,
@@ -207,10 +223,10 @@ function toggleTask(qId, index) {
   // ★ 完成任务时，如果有示例任务，自动替换掉一个示例
   if (task.done) {
     const exampleIdx = tasks[qId].tasks.findIndex(t =>
-      t.text.startsWith('例：') && !t.done && t.id !== task.id
+      (t.text.startsWith('例：') || t.text.startsWith('示例：')) && !t.done && t.id !== task.id
     );
     if (exampleIdx !== -1) {
-      // 用已完成任务替换示例，重置状态让用户可以重新填
+      // 用已完成任务替换示例，让用户可以继续填
       const completedText = task.text;
       tasks[qId].tasks[exampleIdx] = {
         id: Date.now() + Math.random(),
@@ -309,6 +325,58 @@ function clearTime(qId) {
 
 window.clearTime = clearTime;
 
+// ========== 内联编辑任务文字（单击勾选，双击编辑） ==========
+function editTaskText(qId, index) {
+  const task = tasks[qId].tasks[index];
+  const oldText = task.text;
+
+  // 创建内联输入框
+  const taskEl = document.querySelector(`[data-quadrant="${qId}"] .task-item[data-index="${index}"]`);
+  if (!taskEl) return;
+  const textSpan = taskEl.querySelector('.task-text');
+  if (!textSpan) return;
+
+  // 保存原文字，替换为输入框
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'inline-edit';
+  input.value = oldText;
+  input.style.width = '100%';
+  input.style.border = 'none';
+  input.style.outline = 'none';
+  input.style.background = 'rgba(232,117,58,0.08)';
+  input.style.padding = '4px 8px';
+  input.style.borderRadius = '6px';
+  input.style.fontSize = '13px';
+  input.style.fontFamily = 'inherit';
+  input.style.color = 'inherit';
+
+  textSpan.replaceWith(input);
+  input.focus();
+  input.select();
+
+  const finishEdit = (save) => {
+    const newText = save ? input.value.trim() : oldText;
+    if (newText && newText !== oldText) {
+      task.text = newText;
+      saveTasks();
+    }
+    // 恢复显示
+    const newSpan = document.createElement('span');
+    newSpan.className = 'task-text ' + (task.done ? 'done' : '');
+    newSpan.textContent = newText || oldText;
+    newSpan.onclick = function(e) { e.stopPropagation(); editTaskText(qId, index); };
+    input.replaceWith(newSpan);
+  };
+
+  input.addEventListener('blur', () => finishEdit(true));
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { input.blur(); }
+    if (e.key === 'Escape') { finishEdit(false); }
+    e.stopPropagation();
+  });
+}
+
 // ========== 输入框事件 ==========
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && e.target.classList.contains('task-input')) {
@@ -320,6 +388,16 @@ document.addEventListener('keydown', (e) => {
     if (picker) picker.style.display = 'none';
     const btn = document.querySelector(`.btn-time-picker[data-quadrant="${qId}"]`);
     if (btn) btn.classList.remove('active');
+  }
+});
+
+// ★ 全局键盘快捷键：按 i 聚焦到当前第一个输入框
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'i' && !e.ctrlKey && !e.metaKey) {
+    e.preventDefault();
+    const firstInput = document.querySelector('.task-input');
+    if (firstInput) firstInput.focus();
   }
 });
 
@@ -458,3 +536,4 @@ window.toggleRemind = toggleRemind;
 window.clearDoneTasks = clearDoneTasks;
 window.resetAllTasks = resetAllTasks;
 window.closeModal = closeModal;
+window.editTaskText = editTaskText;

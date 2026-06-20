@@ -458,6 +458,33 @@ header {
   background: rgba(0,0,0,0.06);
 }
 
+/* ★ 点击整行切换完成态（点击后视觉反馈） */
+.task-item {
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.task-item:active {
+  transform: scale(0.98);
+}
+
+.task-item.done {
+  opacity: 0.7;
+  background: rgba(160, 144, 136, 0.15) !important;
+  border-color: rgba(160, 144, 136, 0.15) !important;
+}
+
+/* ★ 内联编辑输入框 */
+.inline-edit {
+  flex: 1;
+  min-width: 0;
+}
+
+.inline-edit:focus {
+  box-shadow: 0 0 0 2px var(--orange-glow) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
 /* 空状态提示 */
 .empty-hint {
   display: flex;

@@ -45,7 +45,7 @@ function speakTaskDone(taskText) {
   speechSynthesis.cancel();
 
   const msg = new SpeechSynthesisUtterance(
-    `Hello boss, I have already finish the task. Please check.`
+    `Congratulations! Task completed. Well done!`
   );
   msg.lang = 'en-US';
   msg.rate = 0.9;     // 语速稍慢，清晰

@@ -14,6 +14,49 @@ let tasks = {
 
 let draggedItem = null;
 
+// ========== 英文男声语音播报 ==========
+let speechReady = false;
+let maleVoice = null;
+
+function initSpeech() {
+  if (typeof speechSynthesis === 'undefined') return;
+  speechReady = true;
+  // 尝试找一个英文男声
+  const voices = speechSynthesis.getVoices();
+  maleVoice = voices.find(v =>
+    v.lang.startsWith('en') && v.name.toLowerCase().includes('male')
+  ) || voices.find(v =>
+    v.lang.startsWith('en') && (v.name.includes('David') || v.name.includes('Mark') || v.name.includes('James'))
+  ) || voices.find(v => v.lang.startsWith('en')) || null;
+}
+
+// 可能语音引擎还没加载完，等它
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.addEventListener('voiceschanged', initSpeech);
+  // 立即试一次
+  setTimeout(initSpeech, 500);
+}
+
+function speakTaskDone(taskText) {
+  if (!speechReady && typeof speechSynthesis !== 'undefined') initSpeech();
+  if (typeof speechSynthesis === 'undefined') return;
+
+  // 取消正在播报的
+  speechSynthesis.cancel();
+
+  const msg = new SpeechSynthesisUtterance(
+    `Hello boss, I have already finish the task. Please check.`
+  );
+  msg.lang = 'en-US';
+  msg.rate = 0.9;     // 语速稍慢，清晰
+  msg.pitch = 0.7;    // 低音 = 男声
+  msg.volume = 1;
+
+  if (maleVoice) msg.voice = maleVoice;
+
+  speechSynthesis.speak(msg);
+}
+
 // ========== 初始化 ==========
 document.addEventListener('DOMContentLoaded', async () => {
   await loadTasks();
@@ -218,6 +261,7 @@ function addTask(qId, text) {
 
 function toggleTask(qId, index) {
   const task = tasks[qId].tasks[index];
+  const becomingDone = !task.done;  // 是否即将变成"已完成"
   task.done = !task.done;
 
   // ★ 完成任务时，如果有示例任务，自动替换掉一个示例
@@ -242,6 +286,11 @@ function toggleTask(qId, index) {
 
   saveTasks();
   renderAll();
+
+  // ★ 语音播报：完成一项任务时播报
+  if (becomingDone) {
+    setTimeout(() => speakTaskDone(task.text), 300);
+  }
 }
 
 function deleteTask(qId, index) {
